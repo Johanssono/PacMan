@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization.Json;
 
 namespace WallsStart
 {
@@ -18,8 +19,11 @@ namespace WallsStart
         private Turtle turtle;
         private System.Random random;
         private List<Wall> walls;
+        private List<Cherry> Cherries;
+
         private int width;
         private int height;
+        private float cherryamountmax = 6f;
 
         /// <summary>
         /// Construct a game world.
@@ -58,15 +62,79 @@ namespace WallsStart
         /// Called by the WallGame instance when the game is initialized.
         /// </summary>
 
+
+
+
+
+
         public void Initialize()
         {
             // Place the turtle in the center of the screen.
-            turtle = new Turtle(new Vector2(width / 2, height / 2), this);
+            turtle = new Turtle(new Vector2(25, 340), this);
 
+
+            /*
             // Add some walls.
-            walls.Add(new Wall(new Vector2(200, height / 2)));
-            walls.Add(new Wall(new Vector2(600, height / 2)));
+            for (int y = 25; y < height + 50; y += 50)
+            {
+                walls.Add(new Wall(new Vector2(25, y)));
+                if (y == 225)
+                    y = 345;
+            }
+            for (int y = 25; y < height + 50; y += 50)
+            {
+                walls.Add(new Wall(new Vector2(1725, y)));
+                if (y == 225)
+                    y = 345;
+            }
+            for (int x = 25; x < width + 50; x += 50)
+            {
+                walls.Add(new Wall(new Vector2(x, 25)));
+            }
+            for (int x = 25; x < width + 50; x += 50)
+            {
+                walls.Add(new Wall(new Vector2(x, 825)));
+            }
+
+
+            for (int y = 75; y < height - 150; y += 50)
+            {
+                for (int x = 180; x < width - 50; x = x + 340)
+                {
+                    walls.Add(new Wall(new Vector2(x, y)));
+
+                }
+            }
+
+            
+            for (int y = 175; y < height - 50; y += 50)
+            {
+                for (int x = 360; x < width - 50; x = x + 340)
+                {
+                    walls.Add(new Wall(new Vector2(x, y)));
+
+                }
+            }
+
+
+            
+            for (int y = 150; y < height - 75; y += 50)
+            {
+                for (int x = 340; x < width - 50; x = x + 350)
+                {
+                    walls.Add(new Wall(new Vector2(x, y)));
+
+                }
+            }
+            */
+            LoadLevel();
+
+
+
+
+
         }
+
 
         /// <summary>
         /// Called by the WallGame instance when the game is loaded.
@@ -77,7 +145,7 @@ namespace WallsStart
         public void LoadContent(GraphicsDeviceManager graphics, ContentManager content)
         {
             // TODO: use content to load your game content here
-            Turtle.SetTexture2D(content.Load<Texture2D>("turtle2"));
+            Turtle.SetTexture2D(content.Load<Texture2D>("turtle2_half"));
             Wall.SetTexture2D(content.Load<Texture2D>("Wall"));
 
         }
@@ -92,10 +160,23 @@ namespace WallsStart
             // Call Update on all game objects.
             turtle.Update(gameTime);
 
+            
+
         }
 
 
-
+        private void PlaceCherry()
+        {
+            if (cherryamountmax > 0)
+            {
+                float x = (float)random.NextDouble() * width;
+                float y = (float)random.NextDouble() * height;
+                Cherries.Add(new Cherry(new Vector2(x, y)));
+                /*
+                if ()
+                */
+            }
+        }
 
         /// <summary>
         /// This method is called by the WallGame object once per frame to draw the game.
@@ -122,6 +203,57 @@ namespace WallsStart
         public List<Wall> GetWalls()
         {
             return walls;
+        }
+
+        private void LoadLevel()
+        {
+            char[][] maze = new char[16][16];
+            FileReader fileReader = new FileReader();
+            String level = fileReader.ReadFile();
+            int x = 25;
+            int col = 0;
+            int y = 25;
+            int row = 0;
+            foreach (char token in level)
+            {
+                if (token == 'x')
+                {
+                    walls.Add(new Wall(new Vector2(x, y)));
+                    maze[col][row] = token;
+                }
+                else if (token == 't')
+                {
+                    // only one turtle
+                    turtle = new Turtle(new Vector2(x, y), this);
+                    maze[col][row] = token;
+                }
+                if (token == '\n')
+                {
+                    x = 25;
+                    col = 0;
+                    y += 50;
+                    row += 1;
+                }
+                else
+                {
+                    x += 50;
+                    col += 1;
+                    maze[col][row] = 'e';
+                }
+            }
+
+            // uprepa tills 20 plums lagts till
+            Random random = new Random();
+            col = random.Next(0, 16);
+            row = random.Next(0, 16);
+            if (maze[col][row] == 'e')
+            {
+                maze[col][row] = 'p';
+                // add plum to world
+            }
+            
+
+
         }
     }
 }

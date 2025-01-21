@@ -38,6 +38,9 @@ namespace WallsStart
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            graphics.PreferredBackBufferHeight = 800;
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.ApplyChanges();
             world = new World(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             world.Initialize();
             base.Initialize();

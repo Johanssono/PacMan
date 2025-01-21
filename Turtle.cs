@@ -13,9 +13,12 @@ namespace WallsStart
     /// <summary>
     /// A turtle that can move around the screen.
     /// </summary>
-    public class Turtle
+
+
+public class Turtle
     {
         // Same image for all turtles.
+
         private static Texture2D texture;
         // Containts thes direction the turtle is facing.
         private SpriteEffects spriteEffect;
@@ -48,7 +51,7 @@ namespace WallsStart
             spriteEffect = SpriteEffects.None;
 
             this.position = position;
-            speed = 200f;
+            speed = 800f;
         }
         /// <summary>
         /// Read or set the position of the turtle.
@@ -92,6 +95,18 @@ namespace WallsStart
                 position.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             }
+            else if (keyboardState.IsKeyDown(Keys.Down))
+            {
+                rotation = DOWN;
+                position.Y += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            }
+            else if (keyboardState.IsKeyDown(Keys.Up))
+            {
+                rotation = UP;
+                position.Y -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            }
             // TODO
             // Write your code here.
 
@@ -113,6 +128,17 @@ namespace WallsStart
                         // move back
                         position.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                     }
+                    else if (HasRotation(DOWN))
+                    {
+                        // move back
+                        position.Y -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    }
+                    else if (HasRotation(UP))
+                    {
+                        // move back
+                        position.Y += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    }
+                    
                     // TODO
                     // Write your code here.
 
